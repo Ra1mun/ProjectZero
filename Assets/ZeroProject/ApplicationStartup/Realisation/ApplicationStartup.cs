@@ -1,15 +1,22 @@
-﻿namespace ZeroProject.ApplicationStartup.Realisation
+﻿using Zenject;
+
+namespace ZeroProject.ApplicationStartup.Realisation
 {
     public class ApplicationStartup
     {
-        public ApplicationStartup()
+        private readonly IInstantiator _instantiator;
+
+        public ApplicationStartup(IInstantiator instantiator)
         {
-            
-            ApplicationStart();
+            _instantiator = instantiator;
+
+            StartBootstrap();
         }
-        private void ApplicationStart()
+        private void StartBootstrap()
         {
+            var bootstrap = new Bootstrap.Bootstrap();
             
+            bootstrap.StartExecute();
         }
     }
 }

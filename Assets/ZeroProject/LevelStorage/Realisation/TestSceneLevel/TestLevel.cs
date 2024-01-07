@@ -1,6 +1,6 @@
 ﻿namespace ZeroProject.SceneStorage.Realisation.TestSceneLevel
 {
-    public class TestScene : Scene
+    public class TestLevel : Level
     {
         public override void ShowScene()
         {

@@ -2,7 +2,7 @@
 
 namespace ZeroProject.SceneStorage
 {
-    public abstract class Scene : MonoBehaviour
+    public abstract class Level : MonoBehaviour
     {
         public abstract void ShowScene();
         

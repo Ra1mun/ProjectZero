@@ -1,6 +1,6 @@
 ﻿namespace ZeroProject.SceneStorage.Interfaces
 {
-    public interface ISceneController
+    public interface ILevelController
     {
         void ShowScene();
         void HideScene();

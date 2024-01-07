@@ -2,7 +2,7 @@
 
 namespace ZeroProject.SceneStorage
 {
-    public class SceneRoot : MonoBehaviour
+    public class LevelRoot : MonoBehaviour
     {
         public Transform PoolContainer => poolContainer;
         public Transform Container => container;

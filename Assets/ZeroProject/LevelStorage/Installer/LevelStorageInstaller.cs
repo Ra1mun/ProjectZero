@@ -1,23 +1,24 @@
 using UnityEngine;
 using Zenject;
+using ZeroProject.LevelStorage.SceneService;
 using ZeroProject.SceneStorage;
 
-public class SceneStorageInstaller : Installer<SceneStorageInstaller>
+public class LevelStorageInstaller : Installer<LevelStorageInstaller>
 {
     public override void InstallBindings()
     {
         Container
-            .Bind<SceneRoot>()
+            .Bind<LevelRoot>()
             .FromComponentInNewPrefabResource("SceneRoot")
             .AsSingle();
         
         Container
-            .Bind<SceneService>()
+            .Bind<LevelService>()
             .AsSingle();
         
 
         Container
-            .Bind<ScenesController>()
+            .Bind<LevelsController>()
             .AsSingle();
     }
 }

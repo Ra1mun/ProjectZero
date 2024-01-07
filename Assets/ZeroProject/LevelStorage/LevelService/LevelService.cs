@@ -2,31 +2,32 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
+using ZeroProject.SceneStorage;
 
-namespace ZeroProject.SceneStorage
+namespace ZeroProject.LevelStorage.SceneService
 {
-    public class SceneService
+    public class LevelService
     {
         private readonly IInstantiator _instantiator;
-        private readonly SceneRoot _sceneRoot;
+        private readonly LevelRoot _levelRoot;
 
-        private readonly Dictionary<Type, Scene> _levelStorage = new Dictionary<Type, Scene>();
+        private readonly Dictionary<Type, Level> _levelStorage = new Dictionary<Type, Level>();
         private readonly Dictionary<Type, GameObject> _instViews = new Dictionary<Type, GameObject>();
 
-        public SceneService(IInstantiator instantiator,
-            SceneRoot sceneRoot)
+        public LevelService(IInstantiator instantiator,
+            LevelRoot levelRoot)
         {
             _instantiator = instantiator;
-            _sceneRoot = sceneRoot;
+            _levelRoot = levelRoot;
         }
 
         public void LoadLevels()
         {
-            var levels = Resources.LoadAll("SceneLevels", typeof(Scene));
+            var levels = Resources.LoadAll("Levels", typeof(Level));
 
             foreach (var level in levels)
             {
-                _levelStorage.Add(level.GetType(), (Scene)level);
+                _levelStorage.Add(level.GetType(), (Level)level);
             }
         }
 
@@ -38,7 +39,7 @@ namespace ZeroProject.SceneStorage
             }
         }
 
-        public T Show<T>() where T : Scene
+        public T Show<T>() where T : Level
         {
             var type = typeof(T);
             if (_instViews.ContainsKey(type))
@@ -48,7 +49,7 @@ namespace ZeroProject.SceneStorage
                 view.transform.localPosition = Vector3.zero;
                 view.transform.localScale = Vector3.zero;
                 view.transform.localRotation = Quaternion.identity;
-                view.transform.SetParent(_sceneRoot.Container);
+                view.transform.SetParent(_levelRoot.Container);
 
                 var component = view.GetComponent<T>();
                 
@@ -59,7 +60,7 @@ namespace ZeroProject.SceneStorage
             return null;
         }   
         
-        public void Hide<T>(Action onEnd = null) where T : Scene
+        public void Hide<T>(Action onEnd = null) where T : Level
         {
             var type = typeof(T);
             if (_instViews.ContainsKey(type))
@@ -70,7 +71,7 @@ namespace ZeroProject.SceneStorage
                 view.transform.localPosition = Vector3.zero;
                 view.transform.localScale = Vector3.zero;
                 view.transform.localRotation = Quaternion.identity;
-                view.transform.SetParent(_sceneRoot.PoolContainer);
+                view.transform.SetParent(_levelRoot.PoolContainer);
 
                 viewComponent.HideScene();
             }
@@ -95,7 +96,7 @@ namespace ZeroProject.SceneStorage
             }
         }
 
-        public T Get<T>() where T : Scene
+        public T Get<T>() where T : Level
         {
             var type = typeof(T);
             if (_instViews.ContainsKey(type))
