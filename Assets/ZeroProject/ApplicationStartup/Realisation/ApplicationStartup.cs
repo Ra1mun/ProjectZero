@@ -1,4 +1,7 @@
 ﻿using Zenject;
+using ZeroProject.Camera;
+using ZeroProject.LevelStorage.LevelService;
+using ZeroProject.UI.Realisation;
 
 namespace ZeroProject.ApplicationStartup.Realisation
 {
@@ -16,6 +19,9 @@ namespace ZeroProject.ApplicationStartup.Realisation
         {
             var bootstrap = new Bootstrap.Bootstrap();
             
+            bootstrap.AddCommand(_instantiator.Instantiate<InitLevelServiceCommand>());
+            bootstrap.AddCommand(_instantiator.Instantiate<InitCameraCommand>());
+
             bootstrap.StartExecute();
         }
     }

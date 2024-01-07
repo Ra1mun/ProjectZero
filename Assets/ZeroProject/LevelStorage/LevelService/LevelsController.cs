@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using ZeroProject.SceneStorage.Interfaces;
 
-namespace ZeroProject.SceneStorage
+namespace ZeroProject.LevelStorage.LevelService
 {
     public class LevelsController
     {

@@ -1,4 +1,4 @@
-﻿using ZeroProject.LevelStorage.SceneService;
+﻿using ZeroProject.LevelStorage.LevelService;
 using ZeroProject.SceneStorage.Interfaces;
 
 namespace ZeroProject.SceneStorage.Realisation.TestSceneLevel

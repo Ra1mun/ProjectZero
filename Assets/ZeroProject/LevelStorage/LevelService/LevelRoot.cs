@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace ZeroProject.SceneStorage
+namespace ZeroProject.LevelStorage.LevelService
 {
     public class LevelRoot : MonoBehaviour
     {

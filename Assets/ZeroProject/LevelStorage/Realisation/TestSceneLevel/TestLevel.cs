@@ -1,4 +1,6 @@
-﻿namespace ZeroProject.SceneStorage.Realisation.TestSceneLevel
+﻿using ZeroProject.LevelStorage.LevelService;
+
+namespace ZeroProject.SceneStorage.Realisation.TestSceneLevel
 {
     public class TestLevel : Level
     {

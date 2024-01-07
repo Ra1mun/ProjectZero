@@ -2,7 +2,7 @@
 
 namespace ZeroProject.SceneObject.Realisation
 {
-    public class SceneObject : MonoBehaviour
+    public abstract class SceneObject : MonoBehaviour
     {
         
     }

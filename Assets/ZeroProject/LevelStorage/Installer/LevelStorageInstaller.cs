@@ -1,6 +1,6 @@
 using UnityEngine;
 using Zenject;
-using ZeroProject.LevelStorage.SceneService;
+using ZeroProject.LevelStorage.LevelService;
 using ZeroProject.SceneStorage;
 
 public class LevelStorageInstaller : Installer<LevelStorageInstaller>

@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
-using ZeroProject.SceneStorage;
 
-namespace ZeroProject.LevelStorage.SceneService
+namespace ZeroProject.LevelStorage.LevelService
 {
     public class LevelService
     {
@@ -31,7 +30,7 @@ namespace ZeroProject.LevelStorage.SceneService
             }
         }
 
-        public void InitWindows()
+        public void InitLevels()
         {
             foreach (var sceneLevel in _levelStorage)
             {
