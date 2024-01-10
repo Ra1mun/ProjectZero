@@ -10,7 +10,12 @@ public class ApplicationInstaller : MonoInstaller
     public override void InstallBindings()
     {
         var developmentSettings = new DevelopmentSettings(uiType);
-
+        
+        Container
+            .Bind<DevelopmentSettings>()
+            .FromInstance(developmentSettings)
+            .AsSingle();
+        
         if (uiType == UIType.Game)
         {
             LevelStorageInstaller.Install(Container);
@@ -24,11 +29,8 @@ public class ApplicationInstaller : MonoInstaller
         
         Container
             .Bind<ApplicationStartup>()
-            .AsSingle();
-
-        Container
-            .Bind<DevelopmentSettings>()
-            .AsSingle();
+            .AsSingle()
+            .NonLazy();
     }
 }
 

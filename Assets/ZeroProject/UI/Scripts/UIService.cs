@@ -8,6 +8,7 @@ namespace ZeroProject.UI.Realisation
     public class UIService
     {
         private readonly IInstantiator _instantiator;
+        private readonly UIRoot _uiRoot;
         private Dictionary<Type, UIPanelView> _uiPanelsStorage = new Dictionary<Type, UIPanelView>();
         private Dictionary<Type, GameObject> _instViews = new Dictionary<Type, GameObject>();
 
@@ -16,12 +17,17 @@ namespace ZeroProject.UI.Realisation
             UIRoot uiRoot)
         {
             _instantiator = instantiator;
+            _uiRoot = uiRoot;
         }
 
         public void LoadPanels(UIType uiType)
         {
             var panels = Resources.LoadAll(uiType == UIType.MainMenu ? "MainMenuPanels" : "GamePanels", typeof(UIPanelView));
-
+            if (panels != null)
+            {
+                Debug.Log("All panels were loaded!");
+            }
+            
             foreach (var panel in panels)
             {
                 _uiPanelsStorage.Add(panel.GetType(), (UIPanelView)panel); 
@@ -32,9 +38,49 @@ namespace ZeroProject.UI.Realisation
         {
             foreach (var panel in _uiPanelsStorage.Keys)
             {
-                Init(panel);
+                Init(panel, _uiRoot.PoolContainer);
             }
         }
+
+        public T Show<T>() where T : UIPanelView
+        {
+            var type = typeof(T);
+            if (_instViews.ContainsKey(type))
+            {
+                var view = _instViews[type];
+                
+                view.transform.localPosition = Vector3.zero;
+                view.transform.localScale = Vector3.one;
+                view.transform.localRotation = Quaternion.identity;
+                view.transform.SetParent(_uiRoot.Container);
+
+                var component = view.GetComponent<T>();
+                
+                component.Show();
+                return component;
+            }
+
+            return null;
+        }
+        
+        public void Hide<T>(Action onEnd = null) where T : UIPanelView
+        {
+            var type = typeof(T);
+            if (_instViews.ContainsKey(type))
+            {
+                var view = _instViews[type];
+                var viewComponent = view.GetComponent<T>();
+                
+                view.transform.localPosition = Vector3.zero;
+                view.transform.localScale = Vector3.zero;
+                view.transform.localRotation = Quaternion.identity;
+                view.transform.SetParent(_uiRoot.PoolContainer);
+
+                viewComponent.Hide();
+            }
+            
+            onEnd?.Invoke();
+        } 
 
         private void Init(Type type, Transform parent = null)
         {
@@ -53,6 +99,18 @@ namespace ZeroProject.UI.Realisation
                 
                 _instViews.Add(type, view);
             }
+        }
+        
+        public T Get<T>() where T : UIPanelView
+        {
+            var type = typeof(T);
+            if (_instViews.ContainsKey(type))
+            {
+                var view = _uiPanelsStorage[type];
+                return view.GetComponent<T>();
+            }
+
+            return null;
         }
     }
 

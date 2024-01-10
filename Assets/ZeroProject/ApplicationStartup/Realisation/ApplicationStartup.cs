@@ -1,13 +1,17 @@
-﻿using Zenject;
+﻿using Unity.VisualScripting;
+using Zenject;
 using ZeroProject.Camera;
-using ZeroProject.LevelStorage.LevelService;
 using ZeroProject.UI.Realisation;
 
 namespace ZeroProject.ApplicationStartup.Realisation
 {
     public class ApplicationStartup
     {
+        public event System.Action OnStartInit;
+        public event System.Action OnEndInit;
+        
         private readonly IInstantiator _instantiator;
+        private Bootstrap.Bootstrap _bootstrap;
 
         public ApplicationStartup(IInstantiator instantiator)
         {
@@ -17,12 +21,25 @@ namespace ZeroProject.ApplicationStartup.Realisation
         }
         private void StartBootstrap()
         {
-            var bootstrap = new Bootstrap.Bootstrap();
+            OnStartInit?.Invoke();
             
-            bootstrap.AddCommand(_instantiator.Instantiate<InitLevelServiceCommand>());
-            bootstrap.AddCommand(_instantiator.Instantiate<InitCameraCommand>());
+            _bootstrap = new Bootstrap.Bootstrap();
 
-            bootstrap.StartExecute();
+            _bootstrap.AddCommand(_instantiator.Instantiate<InitCameraCommand>());
+            _bootstrap.AddCommand(_instantiator.Instantiate<InitUIPanelCommand>());
+
+            _bootstrap.AllCommandDone += Start;
+
+            _bootstrap.StartExecute();
+        }
+
+        private void Start()
+        {
+            _bootstrap.AllCommandDone -= Start;
+            _instantiator.Instantiate<InitApplicationCommand>()
+                .Execute();
+            
+            OnEndInit?.Invoke();
         }
     }
 }

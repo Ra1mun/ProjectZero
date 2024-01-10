@@ -1,18 +1,24 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using ZeroProject.Bootstrap.Interfaces;
+using ZeroProject.UI.Realisation;
 
-public class InitApplicationCommand : MonoBehaviour
+public class InitApplicationCommand : ICommand
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    private readonly UIPanelsController _uiPanelsController;
+    public Action Done { get; set; }
 
-    // Update is called once per frame
-    void Update()
+    public InitApplicationCommand(UIPanelsController uiPanelsController)
     {
+        _uiPanelsController = uiPanelsController;
+    }
+    
+    public void Execute()
+    {
+        _uiPanelsController.ShowFirstPanel();
         
+        Done?.Invoke();
     }
 }
