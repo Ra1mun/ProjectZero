@@ -9,6 +9,7 @@ namespace ZeroProject.UI.Realisation.MenuPanel
         public event Action OnPlayButtonClickEvent;
         
         [SerializeField] private Button _playButton;
+        
         public override void Show()
         {
             _playButton.onClick.AddListener(OnPlayButtonClick);
