@@ -22,6 +22,8 @@ public class ApplicationInstaller : MonoInstaller
         }
         
         UIPanelInstaller.Install(Container);
+        
+        StatsInstaller.Install(Container);
 
         Container
             .Bind<SceneObjectStorage>()

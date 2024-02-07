@@ -1,32 +1,39 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using Unity.VisualScripting;
 using ZeroProject.Bootstrap.Interfaces;
 using ZeroProject.UI.Realisation;
 using ZeroProject.UI.Realisation.MenuPanel;
 
-public class InitApplicationCommand : ICommand
+namespace ZeroProject.ApplicationStartup.Realisation
 {
-    private readonly MainMenuPanelController _mainMenuPanelController;
-    private readonly DevelopmentSettings _developmentSettings;
-    private readonly UIService _uiService;
-    public Action Done { get; set; }
+    public class InitApplicationCommand : ICommand
+    {
+        private readonly UIPanelsController _uiPanelsController;
+        private readonly DevelopmentSettings _developmentSettings;
 
-    public InitApplicationCommand(MainMenuPanelController mainMenuPanelController,
-        DevelopmentSettings developmentSettings)
-    {
-        _mainMenuPanelController = mainMenuPanelController;
-        _developmentSettings = developmentSettings;
-    }
-    
-    public void Execute()
-    {
-        if (_developmentSettings.UIType == UIType.MainMenu)
+        public Action Done { get; set; }
+
+        public InitApplicationCommand(UIPanelsController uiPanelsController,
+            DevelopmentSettings developmentSettings)
         {
-            _mainMenuPanelController.ShowPanel();
+            _uiPanelsController = uiPanelsController;
+            _developmentSettings = developmentSettings;
         }
+    
+        public void Execute()
+        {
+            switch (_developmentSettings.UIType)
+            {
+                case UIType.MainMenu:
+                    _uiPanelsController.ShowPanel<MainMenuPanelController>();
+                    break;
+                case UIType.Game:
+                    break;
+                default:
+                    throw new NotImplementedException("Panels not found!");
+            }
 
-        Done?.Invoke();
+            Done?.Invoke();
+        }
     }
 }

@@ -19,5 +19,9 @@ public class UIPanelInstaller : Installer<UIPanelInstaller>
         Container
             .Bind<MainMenuPanelController>()
             .AsSingle();
+
+        Container
+            .Bind<UIPanelsController>()
+            .AsSingle();
     }
 }
