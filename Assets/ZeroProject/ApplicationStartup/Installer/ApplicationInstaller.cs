@@ -1,34 +1,40 @@
 using UnityEngine;
 using Zenject;
 using ZeroProject.ApplicationStartup.Realisation;
-using ZeroProject.SceneObject.Realisation;
+using System;
 using ZeroProject.UI.Realisation;
+using ZeroProject.SceneObject.Realisation;
 
 public class ApplicationInstaller : MonoInstaller
 {
-    [SerializeField] private UIType uiType;
+    [SerializeField] private SceneType sceneType;
     public override void InstallBindings()
     {
-        var developmentSettings = new DevelopmentSettings(uiType);
+        var developmentSettings = new DevelopmentSettings(sceneType);
         
         Container
             .Bind<DevelopmentSettings>()
             .FromInstance(developmentSettings)
             .AsSingle();
         
-        if (uiType == UIType.Game)
+        switch (sceneType)
         {
-            LevelStorageInstaller.Install(Container);
+            case SceneType.MainMenu:
+                MainMenuInstaller.Install(Container); 
+                break;
+            case SceneType.Game:
+                GameInstaller.Install(Container);
+                break;
+            default:
+                throw new NotImplementedException($"Installer with type { sceneType } not create!");
         }
-        
+
         UIPanelInstaller.Install(Container);
-        
-        StatsInstaller.Install(Container);
 
         Container
             .Bind<SceneObjectStorage>()
             .AsSingle();
-        
+
         Container
             .Bind<ApplicationStartup>()
             .AsSingle()
@@ -38,9 +44,9 @@ public class ApplicationInstaller : MonoInstaller
 
 public class DevelopmentSettings
 {
-    public readonly UIType UIType;
-    public DevelopmentSettings(UIType uiType)
+    public readonly SceneType SceneType;
+    public DevelopmentSettings(SceneType uiType)
     {
-        UIType = uiType;
+        SceneType = uiType;
     }
 }

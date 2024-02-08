@@ -22,15 +22,15 @@ namespace ZeroProject.UI.Realisation
             _uiRoot = uiRoot;
         }
 
-        public void LoadPanels(UIType uiType)
+        public void LoadPanels(SceneType uiType)
         {
             UnityEngine.Object[] panels;
             switch (uiType)
             {
-                case UIType.MainMenu:
+                case SceneType.MainMenu:
                     panels = Resources.LoadAll("MainMenuPanels", typeof(UIPanelView));
                     break;
-                case UIType.Game:
+                case SceneType.Game:
                     panels = Resources.LoadAll("GamePanels", typeof(UIPanelView));
                     break;
                 default:
@@ -115,7 +115,7 @@ namespace ZeroProject.UI.Realisation
             var type = typeof(T);
             if (_instViews.ContainsKey(type))
             {
-                var view = _uiPanelsStorage[type];
+                var view = _instViews[type];
                 return view.GetComponent<T>();
             }
 
@@ -123,7 +123,7 @@ namespace ZeroProject.UI.Realisation
         }
     }
 
-    public enum UIType
+    public enum SceneType
     {
         MainMenu,
         Game,

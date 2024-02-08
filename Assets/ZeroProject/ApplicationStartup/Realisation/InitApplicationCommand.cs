@@ -22,12 +22,12 @@ namespace ZeroProject.ApplicationStartup.Realisation
     
         public void Execute()
         {
-            switch (_developmentSettings.UIType)
+            switch (_developmentSettings.SceneType)
             {
-                case UIType.MainMenu:
+                case SceneType.MainMenu:
                     _uiPanelsController.ShowPanel<MainMenuPanelController>();
                     break;
-                case UIType.Game:
+                case SceneType.Game:
                     break;
                 default:
                     throw new NotImplementedException("Panels not found!");

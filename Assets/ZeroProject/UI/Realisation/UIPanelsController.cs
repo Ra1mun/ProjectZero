@@ -14,12 +14,12 @@ namespace ZeroProject.UI.Realisation
             DevelopmentSettings developmentSettings,
             MainMenuPanelController mainMenuPanelController)
         {
-            switch (developmentSettings.UIType)
+            switch (developmentSettings.SceneType)
             {
-                case UIType.MainMenu:
+                case SceneType.MainMenu:
                     SetupPanel(mainMenuPanelController);
                     break;
-                case UIType.Game:
+                case SceneType.Game:
                     break;
             }
         }

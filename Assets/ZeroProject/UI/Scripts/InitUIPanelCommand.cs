@@ -19,7 +19,7 @@ namespace ZeroProject.UI.Realisation
 
         public void Execute()
         {
-            _uiService.LoadPanels(_developmentSettings.UIType);
+            _uiService.LoadPanels(_developmentSettings.SceneType);
             _uiService.InitPanels();
             
             Done?.Invoke();
