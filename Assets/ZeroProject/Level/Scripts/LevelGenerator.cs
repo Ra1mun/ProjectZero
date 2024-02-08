@@ -30,7 +30,7 @@ namespace ZeroProject.Level
             for (var i = 0; i < roomsCount; i++)
             {
                 Room.Room room;
-                if (result[0] == null)
+                if (i == 0)
                 {
                     room = _roomStorage.GetRoom(RoomType.Enter);
                     result.Add(room);

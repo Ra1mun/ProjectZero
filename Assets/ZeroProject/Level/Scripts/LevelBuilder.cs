@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
+using ZeroProject.Extensions.ListExtensions;
 using Random = UnityEngine.Random;
 
 namespace ZeroProject.Level
 {
-    public class LevelConstructor
+    public class LevelBuilder
     {
         private readonly LevelGenerator _levelGenerator;
         private readonly LevelRoot _levelRoot;
@@ -15,7 +15,7 @@ namespace ZeroProject.Level
         
         private List<Room.Room> _roomViews = new List<Room.Room>();
 
-        public LevelConstructor(
+        public LevelBuilder(
             LevelGenerator levelGenerator,
             LevelRoot levelRoot,
             IInstantiator instantiator)
@@ -23,9 +23,11 @@ namespace ZeroProject.Level
             _levelGenerator = levelGenerator;
             _levelRoot = levelRoot;
             _instantiator = instantiator;
+            
+            SetupLevel();
         }
 
-        public void SetupLevel()
+        private void SetupLevel()
         {
             _roomViews = _levelGenerator.GenerateLevel();
 
@@ -33,18 +35,18 @@ namespace ZeroProject.Level
             {
                 if (i == 0)
                 {
-                    Init(_roomViews[0], _levelRoot.PoolContainer);
+                    AddRoom(_roomViews.First(), _levelRoot.PoolContainer);
                     break;
                 }
 
                 if (i == _roomViews.Count - 1)
                 {
-                    Init(_roomViews[_roomViews.Count - 1], _levelRoot.PoolContainer);
+                    AddRoom(_roomViews.Last(), _levelRoot.PoolContainer);
                     break;
                 }
                 
                 var index = Random.Range(1, _roomViews.Count - 1);
-                Init(_roomViews[index], _levelRoot.PoolContainer);
+                AddRoom(_roomViews[index], _levelRoot.PoolContainer);
             }
         }
         
@@ -53,7 +55,7 @@ namespace ZeroProject.Level
             _instRooms[0].transform.SetParent(_levelRoot.Container);
         }
 
-        private void Init(Room.Room prefab, Transform parent = null)
+        private void AddRoom(Room.Room prefab, Transform parent = null)
         {
             GameObject instRoom;
             if (parent == null)
@@ -62,12 +64,40 @@ namespace ZeroProject.Level
             }
             else
             {
-                instRoom = _instantiator.InstantiatePrefab(prefab, parent);
+                instRoom = _instantiator.InstantiatePrefab(prefab, Vector3.zero, Quaternion.identity, parent);
+            }
+            
+            if (_instRooms.Count == 0)
+            {
+                _instRooms[0].transform.localPosition = Vector3.zero;
+            }
+            else
+            {
+                instRoom.transform.localPosition 
+                    = ConnectRooms(
+                        _instRooms.Last().GetComponent<Room.Room>(),
+                        instRoom.GetComponent<Room.Room>());
             }
             
             _instRooms.Add(instRoom);
+
+            
         }
 
-        
+        private Vector3 ConnectRooms(Room.Room currentRoom, Room.Room nextRoom)
+        {
+            var transitionPoint = currentRoom
+                .TransitionPoints
+                .TransitPoints
+                .RandomItem()
+                .position;
+            
+            var enterPoint = nextRoom
+                .TransitionPoints
+                .EnterPoint
+                .position;
+            
+            return nextRoom.transform.position + (enterPoint - transitionPoint);
+        }
     }
 }

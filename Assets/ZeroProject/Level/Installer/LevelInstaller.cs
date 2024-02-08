@@ -16,11 +16,8 @@ public class LevelInstaller : Installer<LevelInstaller>
             .AsSingle();
         
         Container
-            .Bind<LevelConstructor>()
+            .Bind<LevelBuilder>()
             .AsSingle();
-
-        
-
         
     }
 }

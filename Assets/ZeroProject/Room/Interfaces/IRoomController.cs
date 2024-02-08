@@ -8,6 +8,8 @@ namespace ZeroProject.Room
 {
     public interface IRoomController
     {
+        Action GoToNextRoom { get; set; }
+        Action GoToPreviousRoom { get; set; }
         void ShowStage();
         void HideStage();
     }
