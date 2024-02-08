@@ -1,13 +1,10 @@
 ﻿using System;
-using UnityEngine.SceneManagement;
 using ZeroProject.UI.Interfaces;
 
 namespace ZeroProject.UI.Realisation.MenuPanel
 {
     public class MainMenuPanelController : IUIPanelController
     {
-        private const string GameScene = "Game";
-        
         public event Action OnPlayClicked;
 
         private readonly UIService _uiService;
@@ -24,7 +21,7 @@ namespace ZeroProject.UI.Realisation.MenuPanel
         public void ShowPanel()
         {
             _mainMenuPanelView.OnPlayButtonClickEvent += OnPlayButtonClick;
-
+            
             _uiService.Show<MainMenuPanelView>();
         }
 

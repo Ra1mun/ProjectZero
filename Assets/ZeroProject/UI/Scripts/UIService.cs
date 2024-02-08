@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
+using Object = System.Object;
 
 namespace ZeroProject.UI.Realisation
 {
@@ -9,6 +10,7 @@ namespace ZeroProject.UI.Realisation
     {
         private readonly IInstantiator _instantiator;
         private readonly UIRoot _uiRoot;
+        
         private Dictionary<Type, UIPanelView> _uiPanelsStorage = new Dictionary<Type, UIPanelView>();
         private Dictionary<Type, GameObject> _instViews = new Dictionary<Type, GameObject>();
 
@@ -22,12 +24,19 @@ namespace ZeroProject.UI.Realisation
 
         public void LoadPanels(UIType uiType)
         {
-            var panels = Resources.LoadAll(uiType == UIType.MainMenu ? "MainMenuPanels" : "GamePanels", typeof(UIPanelView));
-            if (panels != null)
+            UnityEngine.Object[] panels;
+            switch (uiType)
             {
-                Debug.Log("All panels were loaded!");
+                case UIType.MainMenu:
+                    panels = Resources.LoadAll("MainMenuPanels", typeof(UIPanelView));
+                    break;
+                case UIType.Game:
+                    panels = Resources.LoadAll("GamePanels", typeof(UIPanelView));
+                    break;
+                default:
+                    throw new KeyNotFoundException($"Panels with type { uiType } not found!");
             }
-            
+
             foreach (var panel in panels)
             {
                 _uiPanelsStorage.Add(panel.GetType(), (UIPanelView)panel); 
