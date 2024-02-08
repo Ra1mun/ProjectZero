@@ -9,5 +9,14 @@ namespace ZeroProject.Room
         public abstract void Show();
         public abstract void Hide();
     }
+
+    public enum RoomType
+    {
+        Battle,
+        Boss,
+        Enter,
+        Treasure,
+        Shop,
+    }
 }
 
