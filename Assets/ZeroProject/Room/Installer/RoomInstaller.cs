@@ -7,6 +7,9 @@ namespace ZeroProject.Room
     {
         public override void InstallBindings()
         {
+            Container
+                .Bind<RoomStorage>()
+                .AsSingle();
         }
     }
 }

@@ -28,6 +28,7 @@ namespace ZeroProject.ApplicationStartup.Realisation
                     _uiPanelsController.ShowPanel<MainMenuPanelController>();
                     break;
                 case SceneType.Game:
+                    
                     break;
                 default:
                     throw new NotImplementedException("Panels not found!");

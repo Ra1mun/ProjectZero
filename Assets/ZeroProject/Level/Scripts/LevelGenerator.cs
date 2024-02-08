@@ -1,12 +1,16 @@
-﻿using System.Collections.Generic;
-using Zenject;
+﻿using UnityEngine;
+using System.Collections.Generic;
 using ZeroProject.Room;
-using ZeroProject.Room.Realisation;
 
 namespace ZeroProject.Level
 {
     public class LevelGenerator
     {
+        private const int MinimumTreasureRooms = 1;
+        private const int MaximumTreasureRooms = 3;
+        private const int MinimumRoomsCount = 10;
+        private const int MaximumRoomsCount = 30;
+        
         private readonly RoomStorage _roomStorage;
 
         public LevelGenerator(RoomStorage roomStorage)
@@ -14,11 +18,14 @@ namespace ZeroProject.Level
             _roomStorage = roomStorage;
         }
 
-        public List<Room.Room> GenerateLevel(int roomsCount, int treasureRoomCount)
+        public List<Room.Room> GenerateLevel()
         {
+            var roomsCount = Random.Range(MinimumRoomsCount, MaximumRoomsCount);
+            var treasureRoomCount = Random.Range(MinimumTreasureRooms, MaximumTreasureRooms);
+            
             var result = new List<Room.Room>();
             
-            const int currentTreasureRoomCount = 0;
+            var currentTreasureRoomCount = 0;
             
             for (var i = 0; i < roomsCount; i++)
             {
@@ -34,6 +41,7 @@ namespace ZeroProject.Level
                 {
                     room = _roomStorage.GetRoom(RoomType.Treasure);
                     result.Add(room);
+                    currentTreasureRoomCount++;
                     break;
                 }
                 
