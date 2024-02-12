@@ -24,11 +24,11 @@ namespace ZeroProject.Room
     [Serializable]
     public class TransitionPoints
     {
-        public Transform EnterPoint => enterPoint;
-        public List<Transform> TransitPoints => transitPoints;
+        public Transform PreviousRoomPoint => previousRoomPoint;
+        public Transform NextRoomPoint => nextRoomPoint;
         
-        [SerializeField] private Transform enterPoint;
-        [SerializeField] private List<Transform> transitPoints;
+        [SerializeField] private Transform previousRoomPoint;
+        [SerializeField] private Transform nextRoomPoint;
     }
 }
 

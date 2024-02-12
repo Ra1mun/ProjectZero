@@ -1,7 +1,6 @@
 using System;
 using Unity.VisualScripting;
 using ZeroProject.Bootstrap.Interfaces;
-using ZeroProject.Room;
 using ZeroProject.UI.Realisation;
 using ZeroProject.UI.Realisation.MenuPanel;
 
@@ -16,8 +15,7 @@ namespace ZeroProject.ApplicationStartup.Realisation
 
         public InitApplicationCommand(
             UIPanelsController uiPanelsController,
-            DevelopmentSettings developmentSettings,
-            RoomStorage roomStorage)
+            DevelopmentSettings developmentSettings)
         {
             _uiPanelsController = uiPanelsController;
             _developmentSettings = developmentSettings;
