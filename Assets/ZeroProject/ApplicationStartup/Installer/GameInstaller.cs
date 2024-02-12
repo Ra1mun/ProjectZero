@@ -8,7 +8,6 @@ public class GameInstaller : Installer<GameInstaller>
     {
         RoomInstaller.Install(Container);
         
-        LevelInstaller.Install(Container);
         
         StatsInstaller.Install(Container);
     }
