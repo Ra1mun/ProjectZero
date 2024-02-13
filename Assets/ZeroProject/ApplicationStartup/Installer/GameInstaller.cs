@@ -6,9 +6,6 @@ public class GameInstaller : Installer<GameInstaller>
 {
     public override void InstallBindings()
     {
-        RoomInstaller.Install(Container);
-        
-        
         StatsInstaller.Install(Container);
     }
 }
