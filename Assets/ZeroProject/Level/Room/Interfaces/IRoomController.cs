@@ -1,4 +1,6 @@
 ﻿using System;
+using UnityEngine.PlayerLoop;
+using ZeroProject.Level;
 
 namespace ZeroProject.Room.Interfaces
 {
@@ -6,9 +8,9 @@ namespace ZeroProject.Room.Interfaces
     {
         event Action GoToNextRoom;
         event Action GoToPreviousRoom;
-        
-        int ID { get; set; }
-        
+
+        void Initialize(LevelController levelController);
+
         void ShowRoom();
         void HideRoom();
     }

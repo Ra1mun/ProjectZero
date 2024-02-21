@@ -2,6 +2,7 @@
 using UnityEngine;
 using Zenject;
 using ZeroProject.Extensions.ListExtensions;
+using ZeroProject.Room.Interfaces;
 using Random = UnityEngine.Random;
 
 namespace ZeroProject.Level
@@ -12,8 +13,10 @@ namespace ZeroProject.Level
         private readonly LevelRoot _levelRoot;
         private readonly IInstantiator _instantiator;
         
-        private readonly Dictionary<int, GameObject> _instRooms = new Dictionary<int, GameObject>();
-        private readonly Dictionary<int, Room.Room> _roomStorage = new Dictionary<int, Room.Room>();
+        private readonly List<GameObject> _instRooms = new List<GameObject>();
+        private readonly List<Room.Room> _roomStorage = new List<Room.Room>();
+        
+        private readonly LinkedList<IRoomController> _roomControllers = new LinkedList<IRoomController>();
 
         public LevelController(
             LevelGenerator levelGenerator,
@@ -27,73 +30,53 @@ namespace ZeroProject.Level
 
         public void LoadLevel()
         {
-            var roomViews = _levelGenerator.GenerateLevel();
+            var generateLevel = _levelGenerator.GenerateLevel();
 
-            for (int i = 0; i < roomViews.Count; i++)
+            for (int i = 0; i < generateLevel.Item1.Count; i++)
             {
-                if (i == 0)
-                {
-                    Init(roomViews.First(), i, _levelRoot.PoolContainer);
-                    break;
-                }
-
-                if (i == roomViews.Count - 1)
-                {
-                    Init(roomViews.Last(), i, _levelRoot.PoolContainer);
-                    break;
-                }
-                
-                var index = Random.Range(1, roomViews.Count - 1);
-                Init(roomViews[index], i, _levelRoot.PoolContainer);
-                _roomStorage.Add(i, roomViews[index]);
-                roomViews.RemoveAt(index);
+                Init(generateLevel.Item1[i], _levelRoot.PoolContainer);
+                SetupController(generateLevel.Item2[i]);
+                _roomStorage.Add(generateLevel.Item1[i]);
             }
         }
-
-        public Room.Room Show(int id)
+        
+        public void ShowFirstRoom()
         {
-            if (_instRooms.ContainsKey(id))
+            _roomControllers.First?.Value.ShowRoom();
+        }
+
+        public void Show(Room.Room room)
+        {
+            if (_roomStorage.Contains(room))
             {
-                var view = _instRooms[id];
+                var index = _roomStorage.IndexOf(room);
+                var view = _instRooms[index];
                 view.transform.SetParent(_levelRoot.Container);
                 view.transform.localPosition = Vector3.zero;
                 view.transform.localScale = Vector3.one;
                 view.transform.localRotation = Quaternion.identity;
 
-                var component = _instRooms[id].GetComponent<Room.Room>();
+                var component = _instRooms[index].GetComponent<Room.Room>();
                 component.Show();
-                return component;
             }
-
-            return null;
         }
 
-        public void Hide(int id)
+        public void Hide(Room.Room room)
         {
-            if (_instRooms.ContainsKey(id))
+            if (_roomStorage.Contains(room))
             {
-                var view = _instRooms[id];
+                var index = _roomStorage.IndexOf(room);
+                var view = _instRooms[index];
                 
                 view.transform.SetParent(_levelRoot.PoolContainer);
 
-                var component = _instRooms[id].GetComponent<Room.Room>();
+                var component = _instRooms[index].GetComponent<Room.Room>();
                 component.Hide();
             }
         }
-        
-        public Room.Room Get(int id)
-        {
-            if (_instRooms.ContainsKey(id))
-            {
-                var view = _instRooms[id];
-                return view.GetComponent<Room.Room>();
-            }
 
-            return null;
-        }
-        
 
-        private void Init(Room.Room prefab, int id, Transform parent = null)
+        private void Init(Room.Room prefab, Transform parent = null)
         {
             GameObject instRoom;
             if (parent == null)
@@ -105,7 +88,21 @@ namespace ZeroProject.Level
                 instRoom = _instantiator.InstantiatePrefab(prefab, Vector3.zero, Quaternion.identity, parent);
             }
 
-            _instRooms.Add(id, instRoom);
+            _instRooms.Add(instRoom);
+        }
+
+        private void SetupController(IRoomController roomController)
+        {
+            roomController.Initialize(this);
+            
+            if (_roomControllers.Last != null)
+            {
+                _roomControllers.Last.Value.GoToNextRoom += roomController.ShowRoom;
+
+                roomController.GoToPreviousRoom += _roomControllers.Last.Value.ShowRoom;
+            }
+
+            _roomControllers.AddLast(roomController);
         }
     }
 }

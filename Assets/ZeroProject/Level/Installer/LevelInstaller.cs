@@ -1,6 +1,8 @@
 using UnityEngine;
 using Zenject;
 using ZeroProject.Level;
+using ZeroProject.Level.Room;
+using ZeroProject.Level.Room.Realisation;
 
 public class LevelInstaller : Installer<LevelInstaller>
 {
@@ -10,6 +12,10 @@ public class LevelInstaller : Installer<LevelInstaller>
             .Bind<LevelRoot>()
             .FromComponentInNewPrefabResource("LevelRoot")
             .AsSingle();
+
+        Container
+            .Bind<RoomStorage>()
+            .AsSingle();
         
         Container
             .Bind<LevelGenerator>()
@@ -18,6 +24,5 @@ public class LevelInstaller : Installer<LevelInstaller>
         Container
             .Bind<LevelController>()
             .AsSingle();
-        
     }
 }

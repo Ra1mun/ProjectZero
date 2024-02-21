@@ -13,23 +13,10 @@ namespace ZeroProject.Level.Room
 
         public void LoadRooms(string source)
         {
-            _roomStorage.Add(typeof(BattleRoom), Load<BattleRoom>("BattleRooms"));
-            _roomStorage.Add(typeof(BossRoom), Load<BossRoom>("BossRooms"));
-            _roomStorage.Add(typeof(EnterRoom), Load<EnterRoom>("EnterRooms"));
-            _roomStorage.Add(typeof(TreasureRoom), Load<TreasureRoom>("TreasureRooms"));
-        }
-
-        private List<Room> Load<T>(string source) where T : Room
-        {
-            var result = new List<Room>();
-            var rooms = Resources.LoadAll(source, typeof(T));
-            
-            foreach (var room in rooms)
-            {
-                result.Add((Room)room);
-            }
-
-            return result;
+            _roomStorage.Add(typeof(BattleRoom), Load(source + '/' + "BattleRooms"));
+            _roomStorage.Add(typeof(BossRoom), Load(source + '/' + "BossRooms"));
+            _roomStorage.Add(typeof(EnterRoom), Load(source + '/' + "EnterRooms"));
+            _roomStorage.Add(typeof(TreasureRoom), Load(source + '/' + "TreasureRooms"));
         }
 
         public Room Get<T>() where T : Room
@@ -37,10 +24,26 @@ namespace ZeroProject.Level.Room
             var type = typeof(T);
             if (_roomStorage.ContainsKey(type))
             {
+                
                 return _roomStorage[type].RandomItem();
             }
 
             return null;
+        }
+        
+        private List<Room> Load(string path)
+        {
+            var result = new List<Room>();
+            var rooms = Resources.LoadAll(path, typeof(Room));
+            
+            Debug.Log(path);
+            Debug.Log(rooms.Length);
+            foreach (var room in rooms)
+            {
+                result.Add((Room)room);
+            }
+
+            return result;
         }
     }
 }

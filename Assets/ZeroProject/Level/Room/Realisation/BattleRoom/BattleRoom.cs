@@ -5,15 +5,26 @@ namespace ZeroProject.Level.Room.Realisation
 {
     public class BattleRoom : Room
     {
-        public TransitionTrigger PreviousRoomPoint => previousTriggerTrigger;
-        public TransitionTrigger NextRoomPoint => nextTriggerTrigger;
+        public event Action OnNextRoomTriggerEnteredEvent;
+        public event Action OnPreviousRoomTriggerEnteredEvent;
         
-        [SerializeField] private TransitionTrigger previousTriggerTrigger;
-        [SerializeField] private TransitionTrigger nextTriggerTrigger;
+        [SerializeField] private TransitionTrigger previousRoomTrigger;
+        [SerializeField] private TransitionTrigger nextRoomTrigger;
         
         public override void Show()
         {
-            throw new NotImplementedException();
+            nextRoomTrigger.OnTriggerEnter += OnNextRoomTriggerEntered;
+            previousRoomTrigger.OnTriggerEnter += OnPreviousRoomTriggerEntered;
+        }
+
+        private void OnNextRoomTriggerEntered()
+        {
+            OnNextRoomTriggerEnteredEvent?.Invoke();
+        }
+        
+        private void OnPreviousRoomTriggerEntered()
+        {
+            OnPreviousRoomTriggerEnteredEvent?.Invoke();
         }
 
         public override void Hide()
