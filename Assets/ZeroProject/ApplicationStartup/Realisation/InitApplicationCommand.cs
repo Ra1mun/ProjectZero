@@ -1,6 +1,9 @@
 using System;
+using System.Collections.Generic;
 using Unity.VisualScripting;
 using ZeroProject.Bootstrap.Interfaces;
+using ZeroProject.Level;
+using ZeroProject.Level.Room;
 using ZeroProject.UI.Realisation;
 using ZeroProject.UI.Realisation.MenuPanel;
 
@@ -10,15 +13,21 @@ namespace ZeroProject.ApplicationStartup.Realisation
     {
         private readonly UIPanelsController _uiPanelsController;
         private readonly DevelopmentSettings _developmentSettings;
+        private readonly LevelController _levelController;
+        private readonly RoomStorage _roomStorage;
 
         public Action Done { get; set; }
 
         public InitApplicationCommand(
             UIPanelsController uiPanelsController,
-            DevelopmentSettings developmentSettings)
+            DevelopmentSettings developmentSettings,
+            LevelController levelController,
+            RoomStorage roomStorage)
         {
             _uiPanelsController = uiPanelsController;
             _developmentSettings = developmentSettings;
+            _levelController = levelController;
+            _roomStorage = roomStorage;
         }
     
         public void Execute()
@@ -29,9 +38,12 @@ namespace ZeroProject.ApplicationStartup.Realisation
                     _uiPanelsController.ShowPanel<MainMenuPanelController>();
                     break;
                 case SceneType.Game:
+                    _roomStorage.LoadRooms("TestLevel");
+                    _levelController.LoadLevel();
+                    _levelController.ShowFirstRoom();
                     break;
                 default:
-                    throw new NotImplementedException("Panels not found!");
+                    throw new NotImplementedException("Scene not found!");
             }
 
             Done?.Invoke();
