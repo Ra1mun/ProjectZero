@@ -5,30 +5,49 @@ namespace ZeroProject.Level.Room.Realisation
 {
     public class TreasureRoomController : IRoomController
     {
+        private readonly LevelController _levelController;
         public event Action GoToNextRoom;
         public event Action GoToPreviousRoom;
         
         private readonly TreasureRoom _treasureRoom;
-        private LevelController _levelController;
+        
 
-        public TreasureRoomController(TreasureRoom treasureRoom)
+        public TreasureRoomController(
+            TreasureRoom treasureRoom,
+            LevelController levelController)
         {
             _treasureRoom = treasureRoom;
-        }
-
-        public void Initialize(LevelController levelController)
-        {
             _levelController = levelController;
         }
 
         public void ShowRoom()
         {
-            throw new NotImplementedException();
+            _levelController.Show(_treasureRoom);
+            
+            _treasureRoom.OnNextRoomTriggerEnteredEvent += OnNextRoomEnter;
+            _treasureRoom.OnPreviousRoomTriggerEnteredEvent += OnPreviousRoomEnter;
+        }
+
+        private void OnNextRoomEnter()
+        {
+            GoToNextRoom?.Invoke();
+            
+            HideRoom();
+        }
+
+        private void OnPreviousRoomEnter()
+        {
+            GoToPreviousRoom?.Invoke();
+            
+            HideRoom();
         }
 
         public void HideRoom()
         {
-            throw new NotImplementedException();
+            _treasureRoom.OnNextRoomTriggerEnteredEvent -= OnNextRoomEnter;
+            _treasureRoom.OnPreviousRoomTriggerEnteredEvent -= OnPreviousRoomEnter;
+            
+            _levelController.Hide(_treasureRoom);
         }
     }
 }

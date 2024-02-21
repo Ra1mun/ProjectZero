@@ -5,32 +5,32 @@ namespace ZeroProject.Level.Room.Realisation
 {
     public class ShopRoom : Room
     {
-        public event Action GoToNextRoomEvent;
-        public event Action GoToPreviousRoomEvent;
+        public event Action OnNextRoomTriggerEnteredEvent;
+        public event Action OnPreviousRoomTriggerEnteredEvent;
         
-        [SerializeField] private TransitionTrigger previousTriggerTrigger;
-        [SerializeField] private TransitionTrigger nextTriggerTrigger;
+        [SerializeField] private TransitionTrigger previousRoomTrigger;
+        [SerializeField] private TransitionTrigger nextRoomTrigger;
         
         public override void Show()
         {
-            nextTriggerTrigger.OnTriggerEnter += GoToNext;
-            previousTriggerTrigger.OnTriggerEnter += GoToPrevious;
-        }
-        
-        private void GoToNext()
-        {
-            GoToNextRoomEvent?.Invoke();
+            nextRoomTrigger.OnTriggerEnter += OnNextRoomTriggerEntered;
+            previousRoomTrigger.OnTriggerEnter += OnPreviousRoomTriggerEntered;
         }
 
-        private void GoToPrevious()
+        private void OnNextRoomTriggerEntered()
         {
-            GoToPreviousRoomEvent?.Invoke();
+            OnNextRoomTriggerEnteredEvent?.Invoke();
+        }
+        
+        private void OnPreviousRoomTriggerEntered()
+        {
+            OnPreviousRoomTriggerEnteredEvent?.Invoke();
         }
 
         public override void Hide()
         {
-            nextTriggerTrigger.OnTriggerEnter -= GoToNext;
-            previousTriggerTrigger.OnTriggerEnter -= GoToPrevious;
+            nextRoomTrigger.OnTriggerEnter -= OnNextRoomTriggerEntered;
+            previousRoomTrigger.OnTriggerEnter -= OnPreviousRoomTriggerEntered;
         }
     }
 }

@@ -20,55 +20,40 @@ namespace ZeroProject.Level
             _roomStorage = roomStorage;
         }
 
-        public (List<Room.Room>, List<IRoomController>) GenerateLevel()
+        public List<RoomType> GenerateLevel()
         {
             var roomsCount = Random.Range(MinimumRoomsCount, MaximumRoomsCount);
             var treasureRoomCount = Random.Range(MinimumTreasureRooms, MaximumTreasureRooms);
             
-            var item1 = new List<Room.Room>();
-            var item2 = new List<IRoomController>();
+            var result = new List<RoomType>();
             
             var currentTreasureRoomCount = 0;
             
             for (var i = 0; i < roomsCount; i++)
             {
-                Room.Room room;
-                IRoomController roomController;
                 if (i == 0)
                 {
-                    room = _roomStorage.Get<EnterRoom>();
-                    roomController = new EnterRoomController((EnterRoom)room);
-                    item1.Add(room);
-                    item2.Add(roomController);
-                    break;
+                    result.Add(RoomType.Enter);
+                    continue;
                 }
 
                 if (currentTreasureRoomCount < treasureRoomCount)
                 {
-                    room = _roomStorage.Get<TreasureRoom>();
-                    roomController = new TreasureRoomController((TreasureRoom)room);
-                    item1.Add(room);
-                    item2.Add(roomController);
+                    result.Add(RoomType.Treasure);
                     currentTreasureRoomCount++;
-                    break;
+                    continue;
                 }
                 
-                if (item1.Count == roomsCount - 1)
+                if (result.Count == roomsCount - 1)
                 {
-                    room = _roomStorage.Get<BossRoom>();
-                    roomController = new BossRoomController((BossRoom)room);
-                    item1.Add(room);
-                    item2.Add(roomController);
-                    break;
+                    result.Add(RoomType.Boss);
+                    continue;
                 }
-
-                room = _roomStorage.Get<BattleRoom>();
-                roomController = new BattleRoomController((BattleRoom) room);
-                item1.Add(room);
-                item2.Add(roomController);
+                
+                result.Add(RoomType.Battle);
             }
 
-            return (item1, item2);
+            return result;
         }
     }
 }

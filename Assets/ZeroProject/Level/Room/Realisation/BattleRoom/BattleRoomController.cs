@@ -8,26 +8,22 @@ namespace ZeroProject.Level.Room.Realisation
         public event Action GoToNextRoom;
         public event Action GoToPreviousRoom;
         
-        private LevelController _levelController;
-        
+        private readonly LevelController _levelController;
         private readonly BattleRoom _battleRoom;
         
-        public BattleRoomController(BattleRoom battleRoom)
+        public BattleRoomController(BattleRoom battleRoom,
+            LevelController levelController)
         {
             _battleRoom = battleRoom;
-        }
-
-        public void Initialize(LevelController levelController)
-        {
             _levelController = levelController;
         }
-        
+
         public void ShowRoom()
         {
             _levelController.Show(_battleRoom);
             
             _battleRoom.OnNextRoomTriggerEnteredEvent += OnNextRoomEnter;
-            _battleRoom.OnNextRoomTriggerEnteredEvent += OnPreviousRoomEnter;
+            _battleRoom.OnPreviousRoomTriggerEnteredEvent += OnPreviousRoomEnter;
         }
 
         private void OnNextRoomEnter()
@@ -47,7 +43,7 @@ namespace ZeroProject.Level.Room.Realisation
         public void HideRoom()
         {
             _battleRoom.OnNextRoomTriggerEnteredEvent -= OnNextRoomEnter;
-            _battleRoom.OnNextRoomTriggerEnteredEvent -= OnPreviousRoomEnter;
+            _battleRoom.OnPreviousRoomTriggerEnteredEvent -= OnPreviousRoomEnter;
             
             _levelController.Hide(_battleRoom);
         }

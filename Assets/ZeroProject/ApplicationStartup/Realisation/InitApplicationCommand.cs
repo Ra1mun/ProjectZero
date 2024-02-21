@@ -40,6 +40,7 @@ namespace ZeroProject.ApplicationStartup.Realisation
                 case SceneType.Game:
                     _roomStorage.LoadRooms("TestLevel");
                     _levelController.LoadLevel();
+                    _levelController.ShowFirstRoom();
                     break;
                 default:
                     throw new NotImplementedException("Scene not found!");

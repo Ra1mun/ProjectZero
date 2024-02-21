@@ -29,7 +29,8 @@ namespace ZeroProject.Level.Room.Realisation
 
         public override void Hide()
         {
-            throw new NotImplementedException();
+            nextRoomTrigger.OnTriggerEnter -= OnNextRoomTriggerEntered;
+            previousRoomTrigger.OnTriggerEnter -= OnPreviousRoomTriggerEntered;
         }
     }
 }

@@ -9,26 +9,44 @@ namespace ZeroProject.Level.Room.Realisation
         public event Action GoToPreviousRoom;
 
         private readonly EnterRoom _enterRoom;
-        private LevelController _levelController;
+        private readonly LevelController _levelController;
 
-        public EnterRoomController(EnterRoom enterRoom)
+        public EnterRoomController(
+            EnterRoom enterRoom,
+            LevelController levelController)
         {
             _enterRoom = enterRoom;
-        }
-
-        public void Initialize(LevelController levelController)
-        {
             _levelController = levelController;
         }
-
+        
         public void ShowRoom()
         {
-            throw new NotImplementedException();
+            _levelController.Show(_enterRoom);
+            
+            _enterRoom.OnNextRoomTriggerEnteredEvent += OnNextRoomEnter;
+            _enterRoom.OnPreviousRoomTriggerEnteredEvent += OnPreviousRoomEnter;
+        }
+
+        private void OnNextRoomEnter()
+        {
+            GoToNextRoom?.Invoke();
+            
+            HideRoom();
+        }
+
+        private void OnPreviousRoomEnter()
+        {
+            GoToPreviousRoom?.Invoke();
+            
+            HideRoom();
         }
 
         public void HideRoom()
         {
-            throw new NotImplementedException();
+            _enterRoom.OnNextRoomTriggerEnteredEvent -= OnNextRoomEnter;
+            _enterRoom.OnPreviousRoomTriggerEnteredEvent -= OnPreviousRoomEnter;
+            
+            _levelController.Hide(_enterRoom);
         }
     }
 }

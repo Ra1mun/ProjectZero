@@ -20,7 +20,7 @@ public class LevelInstaller : Installer<LevelInstaller>
         Container
             .Bind<LevelGenerator>()
             .AsSingle();
-        
+
         Container
             .Bind<LevelController>()
             .AsSingle();

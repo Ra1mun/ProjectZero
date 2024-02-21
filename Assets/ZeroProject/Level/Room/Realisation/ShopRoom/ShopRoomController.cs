@@ -5,23 +5,49 @@ namespace ZeroProject.Level.Room.Realisation
 {
     public class ShopRoomController : IRoomController
     {
+        
         public event Action GoToNextRoom;
         public event Action GoToPreviousRoom;
-        
-        
-        public void Initialize(LevelController levelController)
-        {
-            throw new NotImplementedException();
-        }
 
+        private readonly ShopRoom _shopRoom;
+        private readonly LevelController _levelController;
+
+        public ShopRoomController(
+            ShopRoom shopRoom,
+            LevelController levelController)
+        {
+            _shopRoom = shopRoom;
+            _levelController = levelController;
+        }
+        
         public void ShowRoom()
         {
-            throw new NotImplementedException();
+            _levelController.Show(_shopRoom);
+            
+            _shopRoom.OnNextRoomTriggerEnteredEvent += OnNextRoomEnter;
+            _shopRoom.OnPreviousRoomTriggerEnteredEvent += OnPreviousRoomEnter;
+        }
+
+        private void OnNextRoomEnter()
+        {
+            GoToNextRoom?.Invoke();
+            
+            HideRoom();
+        }
+
+        private void OnPreviousRoomEnter()
+        {
+            GoToPreviousRoom?.Invoke();
+            
+            HideRoom();
         }
 
         public void HideRoom()
         {
-            throw new NotImplementedException();
+            _shopRoom.OnNextRoomTriggerEnteredEvent -= OnNextRoomEnter;
+            _shopRoom.OnPreviousRoomTriggerEnteredEvent -= OnPreviousRoomEnter;
+            
+            _levelController.Hide(_shopRoom);
         }
     }
 }

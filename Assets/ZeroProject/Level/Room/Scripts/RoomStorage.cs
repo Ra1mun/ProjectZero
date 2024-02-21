@@ -9,22 +9,21 @@ namespace ZeroProject.Level.Room
 {
     public class RoomStorage
     {
-        private readonly Dictionary<Type, List<Room>> _roomStorage = new Dictionary<Type, List<Room>>();
+        private readonly Dictionary<RoomType, List<Room>> _roomStorage = new Dictionary<RoomType, List<Room>>();
 
         public void LoadRooms(string source)
         {
-            _roomStorage.Add(typeof(BattleRoom), Load(source + '/' + "BattleRooms"));
-            _roomStorage.Add(typeof(BossRoom), Load(source + '/' + "BossRooms"));
-            _roomStorage.Add(typeof(EnterRoom), Load(source + '/' + "EnterRooms"));
-            _roomStorage.Add(typeof(TreasureRoom), Load(source + '/' + "TreasureRooms"));
+            _roomStorage.Add(RoomType.Battle, Load(source + '/' + "BattleRooms"));
+            _roomStorage.Add(RoomType.Boss, Load(source + '/' + "BossRooms"));
+            _roomStorage.Add(RoomType.Enter, Load(source + '/' + "EnterRooms"));
+            _roomStorage.Add(RoomType.Shop, Load(source + '/' + "ShopRooms"));
+            _roomStorage.Add(RoomType.Treasure, Load(source + '/' + "TreasureRooms"));
         }
 
-        public Room Get<T>() where T : Room
+        public Room Get(RoomType type)
         {
-            var type = typeof(T);
             if (_roomStorage.ContainsKey(type))
             {
-                
                 return _roomStorage[type].RandomItem();
             }
 
@@ -36,8 +35,6 @@ namespace ZeroProject.Level.Room
             var result = new List<Room>();
             var rooms = Resources.LoadAll(path, typeof(Room));
             
-            Debug.Log(path);
-            Debug.Log(rooms.Length);
             foreach (var room in rooms)
             {
                 result.Add((Room)room);
@@ -45,5 +42,14 @@ namespace ZeroProject.Level.Room
 
             return result;
         }
+    }
+
+    public enum RoomType
+    {
+        Battle,
+        Boss,
+        Enter,
+        Shop,
+        Treasure,
     }
 }
