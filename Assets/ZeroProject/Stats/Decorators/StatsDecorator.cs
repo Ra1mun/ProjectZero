@@ -11,11 +11,11 @@ namespace ZeroProject.Stats.Realisation
             _wrappedEntity = wrappedEntity;
         }
         
-        public Stats GetStats()
+        public PlayerStats GetStats()
         {
             return GetInternalStats();
         }
 
-        protected abstract Stats GetInternalStats();
+        protected abstract PlayerStats GetInternalStats();
     }
 }

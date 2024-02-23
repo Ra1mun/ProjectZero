@@ -2,7 +2,7 @@
 
 namespace ZeroProject.Stats.Interfaces
 {
-    public interface IStatsProvider
+    public interface IPlayerConfigStats
     {
         PlayerStats GetStats();
     }
