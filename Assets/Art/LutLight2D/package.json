@@ -1,0 +1,16 @@
+{
+  "name": "www.nulltale.lutlight2d",
+  "displayName": "LutLight2D",
+  "version": "1.0.0",
+  "unity": "2021.3",
+  "description": "Stylized pixel art lighting via color replacement.",
+  "documentationUrl": "https://forum.unity.com/threads/1542449",
+  "author": {
+    "name": "NullTale",
+    "email": "nulltale@gmail.com",
+    "url": "https://twitter.com/NullTale"
+  },
+  "dependencies": {
+    "com.unity.render-pipelines.universal": "12.1.11"
+  }
+}
