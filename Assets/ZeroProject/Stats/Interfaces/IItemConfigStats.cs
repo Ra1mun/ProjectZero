@@ -2,8 +2,8 @@
 
 namespace ZeroProject.Stats.Interfaces
 {
-    public interface IStatsProvider
+    public interface IItemConfigStats
     {
-        PlayerStats GetStats();
+        ItemStats GetStats();
     }
 }
