@@ -5,7 +5,7 @@ namespace ZeroProject.Level.Room.Realisation
 {
     public class TreasureRoomController : IRoomController
     {
-        private readonly LevelController _levelController;
+        private readonly LevelService _levelService;
         public event Action GoToNextRoom;
         public event Action GoToPreviousRoom;
         
@@ -14,15 +14,15 @@ namespace ZeroProject.Level.Room.Realisation
 
         public TreasureRoomController(
             TreasureRoom treasureRoom,
-            LevelController levelController)
+            LevelService levelService)
         {
             _treasureRoom = treasureRoom;
-            _levelController = levelController;
+            _levelService = levelService;
         }
 
         public void ShowRoom()
         {
-            _levelController.Show(_treasureRoom);
+            _levelService.Show(_treasureRoom.GetInstanceID());
             
             _treasureRoom.OnNextRoomTriggerEnteredEvent += OnNextRoomEnter;
             _treasureRoom.OnPreviousRoomTriggerEnteredEvent += OnPreviousRoomEnter;
@@ -47,7 +47,7 @@ namespace ZeroProject.Level.Room.Realisation
             _treasureRoom.OnNextRoomTriggerEnteredEvent -= OnNextRoomEnter;
             _treasureRoom.OnPreviousRoomTriggerEnteredEvent -= OnPreviousRoomEnter;
             
-            _levelController.Hide(_treasureRoom);
+            _levelService.Hide(_treasureRoom.GetInstanceID());
         }
     }
 }

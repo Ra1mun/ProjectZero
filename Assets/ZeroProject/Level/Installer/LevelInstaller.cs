@@ -22,7 +22,11 @@ public class LevelInstaller : Installer<LevelInstaller>
             .AsSingle();
 
         Container
-            .Bind<LevelController>()
+            .Bind<RoomsController>()
+            .AsSingle();
+
+        Container
+            .Bind<LevelService>()
             .AsSingle();
     }
 }

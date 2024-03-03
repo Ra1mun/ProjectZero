@@ -11,27 +11,28 @@ using Random = UnityEngine.Random;
 
 namespace ZeroProject.Level
 {
-    public class LevelController
+    public class LevelService
     {
         private readonly LevelGenerator _levelGenerator;
         private readonly LevelRoot _levelRoot;
         private readonly IInstantiator _instantiator;
         private readonly RoomStorage _roomStorage;
+        private readonly RoomsController _roomsController;
 
-        private readonly List<GameObject> _instRooms = new List<GameObject>();
-        private readonly List<Room.Room> _roomViews = new List<Room.Room>();
-        private readonly LinkedList<IRoomController> _roomControllers = new LinkedList<IRoomController>();
-
-        public LevelController(
+        private readonly Dictionary<int, GameObject> _instRooms = new Dictionary<int, GameObject>();
+        
+        public LevelService(
             LevelGenerator levelGenerator,
             LevelRoot levelRoot,
             IInstantiator instantiator,
-            RoomStorage roomStorage)
+            RoomStorage roomStorage,
+            RoomsController roomsController)
         {
             _levelGenerator = levelGenerator;
             _levelRoot = levelRoot;
             _instantiator = instantiator;
             _roomStorage = roomStorage;
+            _roomsController = roomsController;
         }
 
         public void LoadLevel()
@@ -42,53 +43,46 @@ namespace ZeroProject.Level
             {
                 if (i == 0 || i == roomTypes.Count - 2)
                 {
-                    AddRoom(roomTypes[i], _levelRoot.PoolContainer);
+                    Init(roomTypes[i], _levelRoot.PoolContainer);
                 }
                 else
                 {
                     var index = Random.Range(1, roomTypes.Count);
-                    AddRoom(roomTypes[index], _levelRoot.PoolContainer);
+                    Init(roomTypes[index], _levelRoot.PoolContainer);
                 }
                 
             }
         }
-        
-        public void ShowFirstRoom()
-        {
-            _roomControllers.First?.Value.ShowRoom();
-        }
 
-        public void Show(Room.Room room)
+        public void Show(int id)
         {
-            if (_roomViews.Contains(room))
+            if (_instRooms.ContainsKey(id))
             {
-                var index = _roomViews.IndexOf(room);
-                var view = _instRooms[index];
+                var view = _instRooms[id];
                 view.transform.SetParent(_levelRoot.Container);
                 view.transform.localPosition = Vector3.zero;
                 view.transform.localScale = Vector3.one;
                 view.transform.localRotation = Quaternion.identity;
 
-                var component = _instRooms[index].GetComponent<Room.Room>();
+                var component = _instRooms[id].GetComponent<Room.Room>();
                 component.Show();
             }
         }
 
-        public void Hide(Room.Room room)
+        public void Hide(int id)
         {
-            if (_roomViews.Contains(room))
+            if (_instRooms.ContainsKey(id))
             {
-                var index = _roomViews.IndexOf(room);
-                var view = _instRooms[index];
+                var view = _instRooms[id];
                 
                 view.transform.SetParent(_levelRoot.PoolContainer);
 
-                var component = _instRooms[index].GetComponent<Room.Room>();
+                var component = _instRooms[id].GetComponent<Room.Room>();
                 component.Hide();
             }
         }
 
-        private void AddRoom(RoomType type, Transform parent = null)
+        private void Init(RoomType type, Transform parent = null)
         {
             GameObject instRoom;
             if (parent == null)
@@ -102,22 +96,9 @@ namespace ZeroProject.Level
             
             var component = instRoom.GetComponent<Room.Room>();
             
-            SetupRoom(GetController(type, component));
+            _roomsController.SetupRoom(GetController(type, component));
 
-            _instRooms.Add(instRoom);
-            _roomViews.Add(component);
-        }
-        
-        private void SetupRoom(IRoomController roomController)
-        {
-            if (_roomControllers.Last != null)
-            {
-                _roomControllers.Last.Value.GoToNextRoom += roomController.ShowRoom;
-
-                roomController.GoToPreviousRoom += _roomControllers.Last.Value.ShowRoom;
-            }
-
-            _roomControllers.AddLast(roomController);
+            _instRooms.Add(instRoom.GetInstanceID(), instRoom);
         }
 
         private IRoomController GetController(RoomType type, Room.Room prefab)

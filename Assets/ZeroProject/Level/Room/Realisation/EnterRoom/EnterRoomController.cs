@@ -9,19 +9,19 @@ namespace ZeroProject.Level.Room.Realisation
         public event Action GoToPreviousRoom;
 
         private readonly EnterRoom _enterRoom;
-        private readonly LevelController _levelController;
+        private readonly LevelService _levelService;
 
         public EnterRoomController(
             EnterRoom enterRoom,
-            LevelController levelController)
+            LevelService levelService)
         {
             _enterRoom = enterRoom;
-            _levelController = levelController;
+            _levelService = levelService;
         }
         
         public void ShowRoom()
         {
-            _levelController.Show(_enterRoom);
+            _levelService.Show(_enterRoom.GetInstanceID());
             
             _enterRoom.OnNextRoomTriggerEnteredEvent += OnNextRoomEnter;
             _enterRoom.OnPreviousRoomTriggerEnteredEvent += OnPreviousRoomEnter;
@@ -46,7 +46,7 @@ namespace ZeroProject.Level.Room.Realisation
             _enterRoom.OnNextRoomTriggerEnteredEvent -= OnNextRoomEnter;
             _enterRoom.OnPreviousRoomTriggerEnteredEvent -= OnPreviousRoomEnter;
             
-            _levelController.Hide(_enterRoom);
+            _levelService.Hide(_enterRoom.GetInstanceID());
         }
     }
 }

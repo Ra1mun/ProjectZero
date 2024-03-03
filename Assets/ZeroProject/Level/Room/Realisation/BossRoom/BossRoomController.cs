@@ -9,20 +9,20 @@ namespace ZeroProject.Level.Room.Realisation
         public event Action GoToPreviousRoom;
 
         private readonly BossRoom _bossRoom;
-        private readonly LevelController _levelController;
+        private readonly LevelService _levelService;
 
         public BossRoomController(
             BossRoom bossRoom,
-            LevelController levelController)
+            LevelService levelService)
         {
             _bossRoom = bossRoom;
-            _levelController = levelController;
+            _levelService = levelService;
         }
         
 
         public void ShowRoom()
         {
-            _levelController.Show(_bossRoom);
+            _levelService.Show(_bossRoom.GetInstanceID());
             
             _bossRoom.OnNextRoomTriggerEnteredEvent += OnNextRoomEnter;
             _bossRoom.OnPreviousRoomTriggerEnteredEvent += OnPreviousRoomEnter;
@@ -47,7 +47,7 @@ namespace ZeroProject.Level.Room.Realisation
             _bossRoom.OnNextRoomTriggerEnteredEvent -= OnNextRoomEnter;
             _bossRoom.OnPreviousRoomTriggerEnteredEvent -= OnPreviousRoomEnter;
             
-            _levelController.Hide(_bossRoom);
+            _levelService.Hide(_bossRoom.GetInstanceID());
         }
     }
 }
