@@ -8,9 +8,12 @@ using ZeroProject.SceneObject.Realisation;
 public class ApplicationInstaller : MonoInstaller
 {
     [SerializeField] private SceneType sceneType;
+    [SerializeField] private float jumpForce;
+    [SerializeField] private float moveSpeed;
     public override void InstallBindings()
     {
-        var developmentSettings = new DevelopmentSettings(sceneType);
+        var developmentSettings = new DevelopmentSettings(
+            sceneType);
         
         Container
             .Bind<DevelopmentSettings>()
@@ -45,8 +48,14 @@ public class ApplicationInstaller : MonoInstaller
 public class DevelopmentSettings
 {
     public readonly SceneType SceneType;
-    public DevelopmentSettings(SceneType uiType)
+    public readonly float JumpForce;
+    public readonly float MoveSpeed;
+    public DevelopmentSettings(SceneType uiType,
+        float jumpForce,
+        float moveSpeed)
     {
         SceneType = uiType;
+        JumpForce = jumpForce;
+        MoveSpeed = moveSpeed;
     }
 }

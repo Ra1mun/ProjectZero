@@ -9,10 +9,7 @@ namespace ZeroProject.Level.Room
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (other.gameObject.GetComponent<Player.Player>())
-            {
-                OnTriggerEnter?.Invoke();
-            }
+            
         }
     }
 }
