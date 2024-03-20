@@ -43,7 +43,7 @@ namespace ZeroProject.ApplicationStartup.Realisation
                     break;
                 case SceneType.Game:
                     _roomStorage.LoadRooms("TestLevel");
-                    _levelService.LoadLevel();
+                    _levelService.InitLevel();
                     _roomsController.ShowFirstRoom();
                     break;
                 default:

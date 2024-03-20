@@ -20,7 +20,7 @@ namespace ZeroProject.Level
         private readonly RoomsController _roomsController;
 
         private readonly Dictionary<int, GameObject> _instRooms = new Dictionary<int, GameObject>();
-        
+
         public LevelService(
             LevelGenerator levelGenerator,
             LevelRoot levelRoot,
@@ -35,7 +35,7 @@ namespace ZeroProject.Level
             _roomsController = roomsController;
         }
 
-        public void LoadLevel()
+        public void InitLevel()
         {
             var roomTypes = _levelGenerator.GenerateLevel();
 
@@ -47,7 +47,7 @@ namespace ZeroProject.Level
                 }
                 else
                 {
-                    var index = Random.Range(1, roomTypes.Count);
+                    var index = Random.Range(1, roomTypes.Count - 1);
                     Init(roomTypes[index], _levelRoot.PoolContainer);
                 }
                 
@@ -66,6 +66,7 @@ namespace ZeroProject.Level
 
                 var component = _instRooms[id].GetComponent<Room.Room>();
                 component.Show();
+                
             }
         }
 
@@ -101,30 +102,35 @@ namespace ZeroProject.Level
             _instRooms.Add(instRoom.GetInstanceID(), instRoom);
         }
 
-        private IRoomController GetController(RoomType type, Room.Room prefab)
+        private IRoomController GetController(RoomType type, Room.Room viewComponent)
         {
             switch (type)
             {
                 case RoomType.Battle:
-                    return new BattleRoomController(
-                        (BattleRoom)prefab,
-                        this);
+                    return _instantiator.Instantiate<BattleRoomController>(new object[]
+                    {
+                        (BattleRoom) viewComponent
+                    });
                 case RoomType.Boss:
-                    return new BossRoomController(
-                        (BossRoom)prefab, 
-                        this);
+                    return _instantiator.Instantiate<BossRoomController>(new object[]
+                    {
+                        (BossRoom) viewComponent
+                    });
                 case RoomType.Enter:
-                    return new EnterRoomController(
-                        (EnterRoom)prefab,
-                        this);
+                    return _instantiator.Instantiate<EnterRoomController>(new object[]
+                    {
+                        (EnterRoom) viewComponent
+                    });
                 case RoomType.Shop:
-                    return new ShopRoomController(
-                        (ShopRoom)prefab,
-                        this);
+                    return _instantiator.Instantiate<ShopRoomController>(new object[]
+                    {
+                        (ShopRoom) viewComponent
+                    });
                 case RoomType.Treasure:
-                    return new TreasureRoomController(
-                        (TreasureRoom)prefab,
-                        this);
+                    return _instantiator.Instantiate<TreasureRoomController>(new object[]
+                    {
+                        (TreasureRoom) viewComponent
+                    });
                 default:
                     throw new NotImplementedException($"Controller with type {type} not found!");
             }
